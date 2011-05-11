@@ -1,0 +1,12 @@
+= Datatables
+
+Datatables is a Rails 3 plugin that enables the easy creation of dynamic datatable views on top of any ActiveRecord model. Datatables provides a simple helper that can be utilized in the view to automatically display a dynamic view on top of a model. Datatables handles the entire front end and backend support to do this.
+
+= Installation
+= Example
+= Why use this plugin?
+= Support
+
+Bug report? Faulty/incomplete documentation? Feature request? Please post an issue on 'http://github.com/Caseproof/metafy/issues'. If its urgent, please contact me from my website at 'http://blairwilliams.com/contact'
+
+Copyright (c) 2004-2011 Caseproof, LLC, released under the MIT license

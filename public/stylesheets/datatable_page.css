@@ -1,0 +1,93 @@
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * General page setup
+ */
+#dt_rdatatable {
+	font: 80%/1.45em "Lucida Grande", Verdana, Arial, Helvetica, sans-serif;
+	margin: 0;
+	padding: 0;
+	color: #333;
+	background-color: #fff;
+}
+
+
+#dt_rdatatable #container {
+	width: 800px;
+	margin: 30px auto;
+	padding: 0;
+}
+
+
+#dt_rdatatable #footer {
+	margin: 50px auto 0 auto;
+	padding: 0;
+}
+
+#dt_rdatatable #demo {
+	margin: 30px auto 0 auto;
+}
+
+#dt_rdatatable .demo_jui {
+	margin: 30px auto 0 auto;
+}
+
+#dt_rdatatable .big {
+	font-size: 1.3em;
+	font-weight: bold;
+	line-height: 1.6em;
+	color: #4E6CA3;
+}
+
+#dt_rdatatable .spacer {
+	height: 20px;
+	clear: both;
+}
+
+#dt_rdatatable .clear {
+	clear: both;
+}
+
+#dt_rdatatable pre {
+	padding: 15px;
+	background-color: #F5F5F5;
+	border: 1px solid #CCCCCC;
+}
+
+#dt_rdatatable h1 {
+	margin-top: 2em;
+	font-size: 1.3em;
+	font-weight: normal;
+	line-height: 1.6em;
+	color: #4E6CA3;
+	border-bottom: 1px solid #B0BED9;
+	clear: both;
+}
+
+#dt_rdatatable h2 {
+	font-size: 1.2em;
+	font-weight: normal;
+	line-height: 1.6em;
+	color: #4E6CA3;
+	clear: both;
+}
+
+#dt_rdatatable a {
+	color: #0063DC;
+	text-decoration: none;
+}
+
+#dt_rdatatable a:hover {
+	text-decoration: underline;
+}
+
+#dt_rdatatable ul {
+	color: #4E6CA3;
+}
+
+.css_right {
+	float: right;
+}
+
+.css_left {
+	float: left;
+}

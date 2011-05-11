@@ -1,0 +1,163 @@
+<% unless @pptions[:selectable].nil? or !@pptions[:selectable] -%>
+<div id="rd_buttons">
+  <a id="rd_clear_selections" class="rd_disabled">Clear Selections</a>
+  <% unless @pptions[:selectable_actions].nil? -%>
+    <% @pptions[:selectable_actions].each do |sa| %>
+&nbsp;&nbsp;<%= sa %>
+    <% end -%>
+  <% end -%>
+</div>
+<% end -%>
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="rdatatable">
+  <thead>
+    <tr>
+      <% @columns.each_pair do |key,col| -%>
+        <th width="<%= col[:width] %>"><%= col[:label] || key.to_s.humanize %></th>
+      <% end -%>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td colspan="<%= @columns.length.to_s %>" class="dataTables_empty"><%= image_tag "upload_indicator.gif", :title => "progress", :class => "progress" %></td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <% @columns.each_pair do |key,col| -%>
+        <th><input type="text" name="search_<%= key.to_s %>" value="Search <%= col[:label] || key.to_s.humanize %>" class="search_init" rel="<%= @columns.keys.index(key) %>" /></th>
+      <% end -%>
+    </tr>
+  </tfoot>
+</table>
+
+<%= javascript_tag :defer => 'defer' do -%>
+  var asInitVals = new Array();
+  
+<% unless @pptions[:selectable].nil? or !@pptions[:selectable] -%>
+  var gaiSelected = [];
+  
+  function rd_toggle_buttons() {
+    if( gaiSelected.length > 0 )
+    {
+      jQuery("#rd_buttons a").removeClass('rd_disabled');
+      jQuery("#rd_buttons a").addClass('rd_enabled');
+    }
+    else
+    {
+      jQuery("#rd_buttons a").removeClass('rd_enabled');
+      jQuery("#rd_buttons a").addClass('rd_disabled');
+    }
+  }
+<% end -%>
+
+  function rd_bulk_edit_users() {
+    if( jQuery('#rd_bulk_edit_users').hasClass('rd_enabled') )
+    {
+      jQuery.prettyPhoto.open('/admin/projects/<%= @id %>/edit_users/' + gaiSelected + '?iframe=true&width=90%&height=90%');
+    }
+  }
+
+  jQuery(document).ready(function() {
+    var oTable = jQuery('#rdatatable').dataTable( {
+
+      /* Custom Options */
+      <% @jsoptions.each_pair do |k,v| -%>
+        "<%= k %>": <%= v %>,
+      <% end -%>
+
+      /* Visible / Hidden columns & Formatting */
+      "aoColumnDefs": [
+        <% @columns.each_pair do |name,attrs| -%>
+          <% if attrs[:type] == 'link' -%>
+            /* <%= name.to_s %> */ {
+              "fnRender": function ( oObj ) {
+                return '<a href="' + "<%= attrs[:link] %>".replace( /<%= attrs[:replace] %>/i, oObj.aData[<%= @columns.keys.index( attrs[:replace].to_sym ) %>] ) + '">' + oObj.aData[<%= @columns.keys.index( name.to_sym ) %>] + '</a>';
+              },
+              "aTargets": [ <%= @columns.keys.index( name ) %> ]
+            }<%= "," unless @columns.keys.last == name %>
+          <% elsif attrs[:type] == 'hidden' -%>
+            /* <%= name.to_s %> */ { "bVisible": false, "aTargets": [ <%= @columns.keys.index( name ) %> ] }<%= "," unless @columns.keys.last == name %>
+          <% else -%>
+            /* <%= name.to_s %> */ { "aTargets": [ <%= @columns.keys.index( name ) %> ] }<%= "," unless @columns.keys.last == name %>
+          <% end -%>
+        <% end -%>
+      ],
+      
+    <% unless @pptions[:selectable].nil? or !@pptions[:selectable] -%>
+      "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+  			if ( jQuery.inArray(aData[0], gaiSelected) != -1 ) {
+  				jQuery(nRow).addClass('row_selected');
+  			}
+  			return nRow;
+  		},
+    <% end -%>
+
+      /* Boilerplate Options */
+      "sPaginationType": "full_numbers",
+      "aLengthMenu": [[10, 25, 50, 100, 500], [10, 25, 50, 100, 500]],
+      "bProcessing": true,
+      "bServerSide": true,
+      "sAjaxSource": '/rdtable/<%= @modelname %><%= "/#{@col_str}" %><%= @scope.nil? ? '' : "/#{@scope}" %><%= @id.nil? ? '' : "/#{@id}" %>'
+    } );
+    
+  <% unless @pptions[:selectable].nil? or !@pptions[:selectable] -%>
+    jQuery('#rd_clear_selections').click( function () {
+      gaiSelected = [];
+      jQuery("#rdatatable tbody tr").removeClass('row_selected');
+      rd_toggle_buttons();
+    });
+
+  	/* Click event handler */
+  	jQuery('#rdatatable tbody tr').live('click', function () {
+  		var aData = oTable.fnGetData( this );
+  		var iId = aData[0];
+
+  		if ( jQuery.inArray(iId, gaiSelected) == -1 )
+  		{
+  			gaiSelected[gaiSelected.length++] = iId;
+  		}
+  		else
+  		{
+  			gaiSelected = jQuery.grep(gaiSelected, function(value) {
+  				return value != iId;
+  			} );
+  		}
+
+  		jQuery(this).toggleClass('row_selected');
+      rd_toggle_buttons();
+  	} );  
+  <% end -%>
+
+    jQuery("tfoot input").keyup( function () {
+      /* Filter on the column (the index) of this element */
+      oTable.fnFilter( this.value, jQuery(this).attr('rel') );
+      gaiSelected = []; // clear the selection on filter
+      rd_toggle_buttons();
+    } );
+
+    /*
+     * Support functions to provide a little bit of 'user friendlyness' to the textboxes in 
+     * the footer
+     */
+    jQuery("tfoot input").each( function (i) {
+      asInitVals[i] = this.value;
+    } );
+
+    jQuery("tfoot input").focus( function () {
+      if ( this.className == "search_init" )
+      {
+        this.className = "";
+        this.value = "";
+      }
+    } );
+
+    jQuery("tfoot input").blur( function (i) {
+      if ( this.value == "" )
+      {
+        this.className = "search_init";
+        this.value = asInitVals[jQuery("tfoot input").index(this)];
+      }
+    } );
+    
+  } );
+<% end -%>
