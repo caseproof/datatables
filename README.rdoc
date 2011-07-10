@@ -6,24 +6,19 @@ Datatables is a Rails 3 plugin that enables the easy creation of dynamic datatab
 
 To install datatables to your rails project, follow these simple steps:
 
-1. Make sure your project is using the 'jquery-rails' plugin.
-
-2. Add the following line to your Gemfile:
-	gem 'datatables', :git => 'git://github.com/Caseproof/datatables.git'
-	
-3. Run <b>bundle install</b>
-
-4. Run <b>rails generate datatables:install</p>
-
-5. Add the following lines to your layout file after <b>javascript_include_tag :defaults</b>
+==== 1. Make sure your project is using the 'jquery-rails' plugin.
+==== 2. Add the following line to your Gemfile:
+  gem 'datatables', :git => 'git://github.com/Caseproof/datatables.git'
+==== 3. Run <b>bundle install</b>
+==== 4. Run <b>rails generate datatables:install</p>
+==== 5. Add the following lines to your layout file after <b>javascript_include_tag :defaults</b>
   <%= stylesheet_link_tag "datatable_page" %>
   <%= stylesheet_link_tag "datatable_table" %>
   <%= javascript_include_tag 'jquery.dataTables.min' %>
-
-6. Add the Datatable helper mixin to your ApplicationHelper (<b>app/helpers/application_helper.rb</b>) like so:
+==== 6. Add the Datatable helper mixin to your ApplicationHelper (<b>app/helpers/application_helper.rb</b>) like so:
   module ApplicationHelper
-	  include Datatables::Helpers
-	end
+    include Datatables::Helpers
+  end
 
 = Example
 
@@ -47,6 +42,9 @@ There is a lovely helper that you can use to render your datatable that takes in
 
 
 == Standard datatable
+
+The first argument to the datatable helper is the name of the model or an array of model & scope. The second argument is a hash of column names & options.
+
   <%= datatable('company', { :name => { :type => 'string', 
                                         :label => 'Name',
                                         :width => '20%' },
@@ -115,7 +113,7 @@ Note that the edit link path utilizes the :id field in the database table to aut
 
 = Why use this plugin?
 
-It is the easiest way to integrate dynamic datatables into your rails app.
+It is the easiest way to integrate dynamic datatables using the jQuery datatables plugin into your rails app.
 
 = Support
 
