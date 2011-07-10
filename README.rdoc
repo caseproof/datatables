@@ -3,8 +3,120 @@
 Datatables is a Rails 3 plugin that enables the easy creation of dynamic datatable views on top of any ActiveRecord model. Datatables provides a simple helper that can be utilized in the view to automatically display a dynamic view on top of a model. Datatables handles the entire front end and backend support to do this.
 
 = Installation
+
+To install datatables to your rails project, follow these simple steps:
+
+1. Make sure your project is using the 'jquery-rails' plugin.
+
+2. Add the following line to your Gemfile:
+	gem 'datatables', :git => 'git://github.com/Caseproof/datatables.git'
+	
+3. Run <b>bundle install</b>
+
+4. Run <b>rails generate datatables:install</p>
+
+5. Add the following lines to your layout file after <b>javascript_include_tag :defaults</b>
+  <%= stylesheet_link_tag "datatable_page" %>
+  <%= stylesheet_link_tag "datatable_table" %>
+  <%= javascript_include_tag 'jquery.dataTables.min' %>
+
+6. Add the Datatable helper mixin to your ApplicationHelper (<b>app/helpers/application_helper.rb</b>) like so:
+  module ApplicationHelper
+	  include Datatables::Helpers
+	end
+
 = Example
+
+With datatables it's easy to add rich datatables to your views that correspond with your active record models.
+
+There is a lovely helper that you can use to render your datatable that takes in a whole host of options. Unfortunately, there's still quite a bit of work to do with these options to handle every scenario but here's what it support so far:
+
+== Database table:
+
+  +-------------+--------------+------+-----+---------+----------------+
+  | Field       | Type         | Null | Key | Default | Extra          |
+  +-------------+--------------+------+-----+---------+----------------+
+  | id          | int(11)      | NO   | PRI | NULL    | auto_increment |
+  | name        | varchar(255) | YES  | MUL | NULL    |                |
+  | slug        | varchar(255) | YES  | MUL | NULL    |                |
+  | domain      | varchar(255) | YES  | MUL | NULL    |                |
+  | category_id | int(11)      | NO   | MUL | NULL    |                |
+  | created_at  | datetime     | YES  |     | NULL    |                |
+  | updated_at  | datetime     | YES  |     | NULL    |                |
+  +-------------+--------------+------+-----+---------+----------------+
+
+
+== Standard datatable
+  <%= datatable('company', { :name => { :type => 'string', 
+                                        :label => 'Name',
+                                        :width => '20%' },
+                             :slug => { :type => 'string',
+                                        :label => 'Slug',
+                                        :width => '15%' },
+                             :domain => { :type => 'string',
+                                          :label => 'Domain',
+                                          :width => '15%' }
+                           }) %>
+
+== Datatable with a link to edit
+
+Note that the edit link path utilizes the :id field in the database table to automatically insert the correct id on a row by row basis:
+
+  <%= datatable('company', { :id => { :type => 'hidden' },
+                             :name => { :type => 'link', 
+                                            :label => 'Name', 
+                                            :link => edit_admin_company_path(:id),
+                                            :replace => 'id',
+                                            :width => '50%' },
+                             :slug => { :type => 'string',
+                                        :label => 'Slug',
+                                        :width => '25%' },
+                             :domain => { :type => 'string',
+                                          :label => 'Domain',
+                                          :width => '25%' }
+                           }) %>
+
+== Scoped datatable (now we're using the 'dot_org_domains' that can be found in the Company model):
+
+  <%= datatable(['company','dot_org_domains'], { :id => { :type => 'hidden' },
+                                                 :name => { :type => 'link', 
+                                                                :label => 'Name', 
+                                                                :link => edit_admin_company_path(:id),
+                                                                :replace => 'id',
+                                                                :width => '50%' },
+                                                 :slug => { :type => 'string',
+                                                            :label => 'Slug',
+                                                            :width => '25%' },
+                                                 :domain => { :type => 'string',
+                                                              :label => 'Domain',
+                                                              :width => '25%' }
+                                               }) %>
+
+== Association columns
+  <%= datatable(['company','dot_org_domains'], { :id => { :type => 'hidden' },
+                                                 :name => { :type => 'link', 
+                                                                :label => 'Name', 
+                                                                :link => edit_admin_company_path(:id),
+                                                                :replace => 'id',
+                                                                :width => '40%' },
+                                                 :slug => { :type => 'string',
+                                                            :label => 'Slug',
+                                                            :width => '20%' },
+                                                 :domain => { :type => 'string',
+                                                              :label => 'Domain',
+                                                              :width => '20%' },
+                                                 :category_name => { :type => 'string',
+                                                                     :label => 'Category',
+                                                                     :column => 'categories.name',
+                                                                     :width => '20%',
+                                                                     :class => 'center' }
+  
+                                               }) %>
+
 = Why use this plugin?
+
+It is the easiest way to integrate dynamic datatables into your rails app.
+
 = Support
 
 Bug report? Faulty/incomplete documentation? Feature request? Please post an issue on 'http://github.com/Caseproof/metafy/issues'. If its urgent, please contact me from my website at 'http://blairwilliams.com/contact'
