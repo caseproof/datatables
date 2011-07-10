@@ -10,7 +10,7 @@ To install datatables to your rails project, follow these simple steps:
 ==== 2. Add the following line to your Gemfile:
   gem 'datatables', :git => 'git://github.com/Caseproof/datatables.git'
 ==== 3. Run <b>bundle install</b>
-==== 4. Run <b>rails generate datatables:install</p>
+==== 4. Run <b>rails generate datatables:install</b>
 ==== 5. Add the following lines to your layout file after <b>javascript_include_tag :defaults</b>
   <%= stylesheet_link_tag "datatable_page" %>
   <%= stylesheet_link_tag "datatable_table" %>
