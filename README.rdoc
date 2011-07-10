@@ -28,6 +28,9 @@ There is a lovely helper that you can use to render your datatable that takes in
 
 == Database table:
 
+The following examples will use the following database table:
+
+  mysql> desc companies;
   +-------------+--------------+------+-----+---------+----------------+
   | Field       | Type         | Null | Key | Default | Extra          |
   +-------------+--------------+------+-----+---------+----------------+
