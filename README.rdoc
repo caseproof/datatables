@@ -118,6 +118,15 @@ Note that the edit link path utilizes the :id field in the database table to aut
 
 It is the easiest way to integrate dynamic datatables using the jQuery datatables plugin into your rails app.
 
+= Version history
+
+- Version 1.0.0
+  - First Release
+
+= Contribute
+
+If you've got some ideas for datatables let me know and, even better, if you've made some enhancements to the code send me a pull request!
+
 = Support
 
 Bug report? Faulty/incomplete documentation? Feature request? Please post an issue on 'http://github.com/Caseproof/metafy/issues'. If its urgent, please contact me from my website at 'http://blairwilliams.com/contact'
