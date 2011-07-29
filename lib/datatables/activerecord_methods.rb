@@ -5,7 +5,7 @@ class << ActiveRecord::Base
     curr_model = self
     table_name = curr_model.table_name
 
-    if curr_model.metafied?
+    if curr_model.try :metafied?
       metas = curr_model.metafied_attrs || []
     else
       metas = []
