@@ -5,12 +5,15 @@ class << ActiveRecord::Base
     curr_model = self
     table_name = curr_model.table_name
 
-    if curr_model.try :metafied?
-      metas = curr_model.metafied_attrs || []
-    else
+    begin
+      if curr_model.try :metafied?
+        metas = curr_model.metafied_attrs || []
+      else
+        metas = []
+      end
+    rescue NoMethodError
       metas = []
     end
-
     sql_opts = { :select => [], :limit => "", :order => "", :joins => [], :conditions => "" }
     columns = []
     full_columns = []
