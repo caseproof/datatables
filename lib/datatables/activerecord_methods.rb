@@ -14,7 +14,7 @@ class << ActiveRecord::Base
     rescue NoMethodError
       metas = []
     end
-    sql_opts = { :select => [], :limit => "", :order => "", :joins => [], :conditions => "" }
+    sql_opts = { :select => [], :offset=>"", :limit => "", :order => "", :joins => [], :conditions => "" }
     columns = []
     full_columns = []
 
@@ -25,11 +25,11 @@ class << ActiveRecord::Base
     dcols.each do |col|
       col = col.split(':')
       if col.length > 1 # association (already assumed we're joined within a scope)
-        col_fmt = "`#{col[1].to_s}`.`#{col[2].to_s}`"
+        col_fmt = "#{col[1].to_s}.#{col[2].to_s}"
       elsif metas.include? col.first.to_sym
-        col_fmt = "`m_#{col.first.to_s}`.`meta_value`"
+        col_fmt = "m_#{col.first.to_s}.meta_value"
       else
-        col_fmt = "`#{table_name.to_s}`.`#{col.first.to_s}`"
+        col_fmt = "#{table_name.to_s}.#{col.first.to_s}"
       end
 
       columns.push col.first.to_s
@@ -39,7 +39,9 @@ class << ActiveRecord::Base
 
     # Paging
 	  if params['iDisplayStart'] and params['iDisplayLength'] != '-1'
-  	  sql_opts[:limit]  = "#{params['iDisplayStart']},#{params['iDisplayLength']}"
+  	  # sql_opts[:limit]  = "#{params['iDisplayStart']},#{params['iDisplayLength']}"
+      sql_opts[:limit]  = "#{params['iDisplayLength']}"
+      sql_opts[:offset]  = "#{params['iDisplayStart']}"
   	end
 
     # Ordering
@@ -89,21 +91,21 @@ class << ActiveRecord::Base
     # Query
     if dscope.nil?
       # Scope model
-      records = curr_model.select( sql_opts[:select] ).limit( sql_opts[:limit] ).order( sql_opts[:order] ).where( sql_opts[:conditions] ).joins(sql_opts[:joins])
+      records = curr_model.select( sql_opts[:select] ).limit( sql_opts[:limit] ).offset(sql_opts[:offset]).order( sql_opts[:order] ).where( sql_opts[:conditions] ).joins(sql_opts[:joins])
       # Records Found
       filtered_total = curr_model.count( :select => "*", :conditions => sql_opts[:conditions], :joins => sql_opts[:joins] )
       # Total Found
       total = curr_model.count( :select => "*" )
     elsif params[:id].nil?  
       # Scope model
-      records = curr_model.send( dscope.to_s ).select( sql_opts[:select] ).limit( sql_opts[:limit] ).order( sql_opts[:order] ).where( sql_opts[:conditions] ).joins(sql_opts[:joins])
+      records = curr_model.send( dscope.to_s ).select( sql_opts[:select] ).limit( sql_opts[:limit] ).offset(sql_opts[:offset]).order( sql_opts[:order] ).where( sql_opts[:conditions] ).joins(sql_opts[:joins])
       # Records Found
       filtered_total = curr_model.send( dscope.to_s ).count( :select => "*", :conditions => sql_opts[:conditions], :joins => sql_opts[:joins] )
       # Total Found
       total = curr_model.send( dscope.to_s ).count( :select => "*" )
     else
       # Scope model
-      records = curr_model.send( dscope.to_s, params[:id] ).select( sql_opts[:select] ).limit( sql_opts[:limit] ).order( sql_opts[:order] ).where( sql_opts[:conditions] ).joins(sql_opts[:joins])
+      records = curr_model.send( dscope.to_s, params[:id] ).select( sql_opts[:select] ).limit( sql_opts[:limit] ).offset(sql_opts[:offset]).order( sql_opts[:order] ).where( sql_opts[:conditions] ).joins(sql_opts[:joins])
       # Records Found
       filtered_total = curr_model.send( dscope.to_s, params[:id] ).count( :select => "*", :conditions => sql_opts[:conditions], :joins => sql_opts[:joins] )
       # Total Found
