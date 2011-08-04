@@ -40,8 +40,8 @@ class << ActiveRecord::Base
     # Paging
 	  if params['iDisplayStart'] and params['iDisplayLength'] != '-1'
   	  # sql_opts[:limit]  = "#{params['iDisplayStart']},#{params['iDisplayLength']}"
-      sql_opts[:limit]  = "#{params['iDisplayLength']}"
-      sql_opts[:offset]  = "#{params['iDisplayStart']}"
+      sql_opts[:limit]  = "#{params['iDisplayLength']}".to_i
+      sql_opts[:offset]  = "#{params['iDisplayStart']}".to_i
   	end
 
     # Ordering
